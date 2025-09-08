@@ -14,7 +14,7 @@ const onSearch = (q) => {
 
 export default {
     name: 'Home',
-    components: { AppH1, },
+    components: { AppH1,SearchBar,ActionCard,ReportCarousel,BottomNav },
 }
 </script>
 
