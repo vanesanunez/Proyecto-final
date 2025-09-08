@@ -1,41 +1,49 @@
 import supabase from '../services/supabase';
 
-export async function saveGlobalChatMessage(data) {    
+export async function loadLastGlobalChatMessages() {
+    const { data, error } = await supabase
+    .from('global_chat')
+    .select('*');
+
+    if(error) {
+        console.error ('[global-chat.js loadLastGlobalChatMessages] Error al traer los mensajes: ', error);
+        throw error;
+    }
+    return data;
 }
 
-export async function subscribeToGlobalChatNewMessages(callback) {    
+export async function saveGlobalChatMessage(data) {   
+    const { error } = await supabase
+    .from('global_chat')
+    .insert({
+        email: data.email,
+        body: data.body,
+    });
+    if(error) {
+        console.error('[global-chat.js saveGlobalChatMessage] Error al insertar el registro: ', error);
+        throw error;
+    }
 }
 
-//  //setea un "listener" para recibir los msjs emitidos en tiempo real
-//  const globalChatChannel = supabase.channel('global-chat', {
-//     config: {
-//         broadcast: { self: true }, // esto es para que reciba los mensajes que yo misma mando
-//     }
-//  }); 
+export async function subscribeToGlobalChatNewMessages(callback) {   
+    const chatChannel = supabase.channel('global-chat', {
+        config: {
+            broadcast: {
+                self: true,
+            }
+        },
+    });
+    chatChannel.on(
+        'postgres_changes',
+        {
+            event: 'INSERT',
+            schema: 'public',
+            table: 'global_chat',
 
-//  export async function saveGlobalChatMessage(data) {
-//     const res = await globalChatChannel.send({
-//         type: 'broadcast',
-//         event: 'new-message',
-//         payload: {
-//             ...data,
-//         }
-//     });
-//  }
-//  export async function subscribeToGlobalChatNewMessages(callback) {
-//       //definimos que se escuche el evento de emisión "new-message"
-//       globalChatChannel.on(
-//         'broadcast',
-//         {
-//             event: 'new-message'
-//         },
-//         data => {
-//             console.log("data recibida en tiempo real:", data);
-//             //invocamos el callback que recibimos como argumento de la función.
-//             callback(data.payload);
-//         } //el callback para cada mensaje recibido
-//     ); 
-//     //nos suscribimos al canal
-//     globalChatChannel.subscribe();
-
-//  }
+        },
+        data => {
+            callback(data.new);
+        }
+    );
+    chatChannel.subscribe();
+}

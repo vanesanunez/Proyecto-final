@@ -1,6 +1,7 @@
 <script>
+import { nextTick } from 'vue';
 import AppH1 from '../components/AppH1.vue';
-import { saveGlobalChatMessage, subscribeToGlobalChatNewMessages } from '../services/global-chat';
+import { saveGlobalChatMessage, subscribeToGlobalChatNewMessages, loadLastGlobalChatMessages } from '../services/global-chat';
 
 export default {
     name: 'GlobalChat',
@@ -24,11 +25,25 @@ export default {
             body: this.newMessage.body,
             created_at: new Date(),
         });
-            this.messages.body = "";
+            this.newMessage.body = "";
         }
     },
     async mounted() {
-        subscribeToGlobalChatNewMessages(newMessageReceived => this.messages.push(newMessageReceived));
+        //suscripción
+        subscribeToGlobalChatNewMessages( async newMessageReceived => {
+        this.messages.push(newMessageReceived);
+        await nextTick(); //scroll hacia abajo, para que se muestren los último msjs
+            this.$refs.chatContainer.scrollTop = this.$refs.chatContainer.scrollHeight; 
+    });
+
+        //traemos los mensajes iniciales
+        try {
+            this.messages = await loadLastGlobalChatMessages();
+            await nextTick();
+            this.$refs.chatContainer.scrollTop = this.$refs.chatContainer.scrollHeight;
+        } catch (error) {
+            //manejar el error!!
+        }
     }
 
 }
@@ -38,7 +53,9 @@ export default {
     <AppH1>Chat general</AppH1>
 
     <div class="flex gap-4">
-        <section class="overflow-y-auto w-9/12 h-100 p-4 border border-blue-200 rounded">
+        <section 
+        ref="chatContainer"
+        class="overflow-y-auto w-9/12 h-100 p-4 border border-blue-200 rounded">
             <h2 class="sr-only">Lista de mensajes</h2>
 
             <ul class="flex flex-col gap-4">
