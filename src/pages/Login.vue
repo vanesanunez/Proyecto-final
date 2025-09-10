@@ -1,6 +1,7 @@
 <script>
 import AppH1 from '../components/AppH1.vue';
-import { login } from '../services/auth';
+import { login, subscribeToUserState } from '../services/auth';
+
 
 export default {
     name: 'Login',
@@ -20,12 +21,15 @@ export default {
                 this.loading = true;
                 const user = await login(this.user.email, this.user.password);
                 this.loading = false;
-                // //emitimos el evento login con los datos del usuario
-                // this.$emit('login', {id: this.user.id, email: this.user.email});
+                this.$router.push('/');
             } catch (error) {
                 //manejar el error
             }
         }
+    },
+    mounted() {
+        //se suscribe al estado de autenticación
+        subscribeToUserState(newUserState => this.user = newUserState);
     }
 }
 </script>
