@@ -1,5 +1,6 @@
 <script>
 import AppH1 from '../components/AppH1.vue';
+import { register } from '../services/auth';
 
 export default {
     name: 'Register',
@@ -14,8 +15,15 @@ export default {
         }
     },
     methods: {
-        handleSubmit() {
-            //para hacer
+       async handleSubmit() {
+        try {
+            this.loading = true;
+            await register(this.user.email, this.user.password);
+            this.loading = false;
+        } catch (error) {
+            //manejar el error (un cartel?)
+        }
+            
         },
     }
 }
@@ -41,7 +49,9 @@ export default {
             <input 
                 type="password" 
                 id="password" 
-                class="w-full p-2 border border-blue-300 rounded">
+                class="w-full p-2 border border-blue-300 rounded"
+                v-model="user.password"
+                >
         </div>
         <button type="submit" class="w-full transition px-4 py-2 rounded cursor-pointer bg-blue-600 hover:bg-blue-500 focus:bg-blue-500 active:bg-blue-700 text-white"
         >Enviar
