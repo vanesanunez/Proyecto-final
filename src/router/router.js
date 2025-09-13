@@ -20,6 +20,13 @@ const routes = [
     component: () => import('../pages/NewReport.vue'),
   },
 
+  // ✅ Ruta de confirmación después de enviar reporte
+  {
+    path: '/report/confirmado',
+    name: 'ConfirmacionReporte',
+    component: () => import('../pages/ReportConfirm.vue'),
+  }
+
 ];
 
 const router = createRouter({

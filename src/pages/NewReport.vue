@@ -38,14 +38,22 @@
 
 <script setup>
 import { ref } from 'vue'
+import { useRouter } from 'vue-router'
 
 const categoria = ref('')
 const descripcion = ref('')
 const ubicacion = ref('')
+const router = useRouter()
 
 const enviarReporte = () => {
-  console.log('Reporte enviado:', { categoria: categoria.value, descripcion: descripcion.value, ubicacion: ubicacion.value })
-  alert("¡Gracias por tu reporte!")
+  console.log('Reporte enviado:', {
+    categoria: categoria.value,
+    descripcion: descripcion.value,
+    ubicacion: ubicacion.value,
+  })
+
+  // Redirige a la pantalla de confirmación
+  router.push('/report/confirmado')
 }
 </script>
 
