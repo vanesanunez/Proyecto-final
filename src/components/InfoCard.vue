@@ -18,6 +18,7 @@ const fetchInfo = async () => {
   try {
     const response = await fetch("https://datosabiertos-apis.buenosaires.gob.ar/datos_utiles/v1/servicios")
     const result = await response.json()
+    console.log(result);
     data.value = result
     open.value = true
   } catch (err) {
@@ -29,36 +30,39 @@ const fetchInfo = async () => {
 </script>
 
 <template>
-  <div class="max-w-md mx-auto bg-white shadow-lg rounded-xl p-6 border border-gray-200">
-    <h2 class="text-xl font-bold text-blue-700 mb-4">ℹ️ Info Útil</h2>
-    
-    <!-- Botón -->
-    <button 
-      @click="fetchInfo"
-      class="w-full bg-blue-600 text-white py-2 px-4 rounded-lg hover:bg-blue-700 transition"
-    >
-      {{ open ? "Cerrar información" : "Ver información de CABA" }}
-    </button>
+   <div
+  class="w-40 h-40 border-2 border-blue-400 rounded-lg flex flex-col items-center justify-center text-center shadow-md hover:shadow-lg transition"
+>
+  <h2 class="text-base font-semibold text-blue-700 mb-2">ℹ️ Info Útil</h2>
+  
+  <!-- Botón -->
+  <button 
+    @click="fetchInfo"
+    class="bg-blue-600 text-white py-1 px-3 rounded hover:bg-blue-700 transition text-sm"
+  >
+    {{ open ? "Cerrar" : "Ver info CABA" }}
+  </button>
 
-    <!-- Contenido desplegable -->
-    <transition name="fade">
-      <div v-if="open" class="mt-4">
-        <p v-if="loading" class="text-gray-500">Cargando...</p>
-        <p v-if="error" class="text-red-500">{{ error }}</p>
+  <!-- Contenido desplegable -->
+  <transition name="fade">
+    <div v-if="open" class="mt-3 max-h-32 overflow-y-auto text-xs px-2">
+      <p v-if="loading" class="text-gray-500">Cargando...</p>
+      <p v-if="error" class="text-red-500">{{ error }}</p>
 
-        <ul v-if="data.length" class="space-y-2">
-          <li 
-            v-for="(item, index) in data.slice(0,5)" 
-            :key="index"
-            class="p-3 bg-gray-50 rounded-lg border border-gray-200 text-sm shadow-sm"
-          >
-            <p class="font-semibold text-blue-600">📍 {{ item.nombre }}</p>
-            <p class="text-gray-700">{{ item.descripcion }}</p>
-          </li>
-        </ul>
-      </div>
-    </transition>
-  </div>
+      <ul v-if="data.length" class="space-y-1">
+        <li 
+          v-for="(item, index) in data.slice(0,3)" 
+          :key="index"
+          class="border-b border-gray-200 pb-1"
+        >
+          📍 <strong>{{ item.nombre }}</strong><br>
+          <span class="text-gray-600">{{ item.direccion }}</span>
+        </li>
+      </ul>
+    </div>
+  </transition>
+</div>
+   
 </template>
 
 <style scoped>

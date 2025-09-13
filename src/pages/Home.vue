@@ -9,7 +9,7 @@ import InfoCard from '../components/InfoCard.vue';
 
 const onSearch = (q) => {
   if (!q) return;
-  // ejemplo: redirigir a reportes con query, o filtrar
+ 
   // router.push({ name: 'Reports', query: { q } })
   console.log("buscar:", q);
 };
