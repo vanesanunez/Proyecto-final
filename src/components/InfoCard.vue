@@ -16,7 +16,7 @@ const fetchInfo = async () => {
   loading.value = true
   error.value = null
   try {
-    const response = await fetch("https://datosabiertos-apis.buenosaires.gob.ar/datos_utiles/v1/servicios")
+    const response = await fetch("https://datosabiertos-apis.buenosaires.gob.ar/BA_Root/Documentacion?schema_name=datos_utiles")
     const result = await response.json()
     console.log(result);
     data.value = result
