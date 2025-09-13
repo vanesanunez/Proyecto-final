@@ -3,7 +3,7 @@ import supabase from '../services/supabase';
 export async function loadLastGlobalChatMessages() {
     const { data, error } = await supabase
     .from('global_chat')
-    .select('*');
+    .select();
 
     if(error) {
         console.error ('[global-chat.js loadLastGlobalChatMessages] Error al traer los mensajes: ', error);

@@ -20,10 +20,8 @@ export default {
     methods: {
        async sendMessage() {
         await saveGlobalChatMessage({
-            id: this.messages.length + 1,
             email: this.newMessage.email,
             body: this.newMessage.body,
-            created_at: new Date(),
         });
             this.newMessage.body = "";
         }
@@ -92,7 +90,9 @@ export default {
                         v-model="newMessage.body"
                         ></textarea>
                 </div>
-                <button type="submit" class="w-full transition px-4 py-2 rounded cursor-pointer bg-blue-600 hover:bg-blue-500 focus:bg-blue-500 active:bg-blue-700 text-white">Enviar</button>
+                <button type="submit" class="w-full transition px-4 py-2 rounded cursor-pointer bg-blue-600 hover:bg-blue-500 focus:bg-blue-500 active:bg-blue-700 text-white"
+                >Enviar
+                </button>
             </form>
         </section>
     </div>

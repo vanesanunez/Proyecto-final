@@ -1,7 +1,27 @@
 <script>
 import { RouterLink } from 'vue-router';
+import { logout, subscribeToUserState } from '../services/auth';
+
 export default {
     name: 'AppNavbar',
+    data() {
+        return {
+            user: {
+                id: null,
+                email: null,
+            }
+        }
+    },
+    methods: {
+        handleLogout() {
+            logout();
+            this.$router.push('/ingresar');
+        }
+    },
+    mounted() {
+        //se suscribe al estado de autenticación
+        subscribeToUserState(newUserState => this.user = newUserState);
+    }
 }
 </script>
 
