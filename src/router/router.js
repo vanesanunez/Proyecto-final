@@ -11,6 +11,15 @@ const routes = [
     {path: '/ingresar',          component: Login,      },
     {path: '/crear-cuenta',      component: Register,   },
 
+
+    
+  // Ruta para crear nuevo reporte
+  {
+    path: '/report/nuevo',
+    name: 'NuevoReporte',
+    component: () => import('../pages/NewReport.vue'),
+  },
+
 ];
 
 const router = createRouter({
