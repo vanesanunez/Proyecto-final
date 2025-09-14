@@ -1,19 +1,14 @@
 import { createRouter, createWebHistory} from 'vue-router';
-import Home from '../pages/Home.vue';
-import GlobalChat from '../pages/GlobalChat.vue';
-import Login from '../pages/Login.vue';
-import Register from '../pages/Register.vue';
-import MyProfile from '../pages/MyProfile.vue';
+import { subscribeToUserState } from "../services/auth";
+
 
 const routes = [
-
-    {path: '/',                  component:  Home,      },
-    {path: '/chat',              component: GlobalChat, },
-    {path: '/ingresar',          component: Login,      },
-    {path: '/crear-cuenta',      component: Register,   },
-    {path: '/mi-perfil',         component: MyProfile, },
-
-
+    { path: '/',                    component: () => import('../pages/Home.vue')}, 
+    { path: '/ingresar',            component: () => import('../pages/Login.vue')},
+    { path: '/crear-cuenta',        component: () => import('../pages/Register.vue')},
+    { path: '/chat',                component: () => import('../pages/GlobalChat.vue'),   meta:{ requiresAuth: true,},}, 
+    { path: '/mi-perfil',           component: () => import('../pages/MyProfile.vue'),    meta:{ requiresAuth: true,},}, 
+    
     
   // Ruta para crear nuevo reporte
   {
@@ -46,6 +41,20 @@ const routes = [
 const router = createRouter({
     routes,
     history: createWebHistory(),
+});
+
+//1ro verifico que el usuario está autenticado
+let user = {
+  id: null,
+  email: null,
+}
+subscribeToUserState(newUserData => user = newUserData);
+
+//navigation guard
+router.beforeEach((to, from) => {  
+  if(to.meta.requiresAuth && user.id === null){  //si el usuario no está autenticado lo redirecciono a iniciar sesión
+      return '/ingresar';
+  }
 });
 
 export default router;
