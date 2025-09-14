@@ -27,13 +27,36 @@ export default {
 
 <template>
     <nav class="flex justify-between items-center gap-8 p-4 colorinst ">
-        <RouterLink class="text-xl" to="/">Vía Segura</RouterLink>
-            <ul class="flex gap-4">
-                <li><RouterLink to="/">Home</RouterLink></li>
-                <li ><RouterLink to="/chat">Chat general</RouterLink></li>
-                <li ><RouterLink to="/ingresar">Ingresar</RouterLink></li>
-                <li ><RouterLink to="/crear-cuenta">Crear cuenta</RouterLink></li>  
-                 
-            </ul>
-    </nav>
+        <RouterLink class="text-xl" to="/">Red social</RouterLink>
+    <ul class="flex gap-4">
+    <li>
+        <RouterLink to="/">Inicio</RouterLink>
+        </li>
+    <template v-if="user.id !== null">
+    <li>
+    <RouterLink to="/chat">Chat</RouterLink>
+    </li>
+    <li>
+    <RouterLink to="/mi-perfil">Mi perfil</RouterLink>
+    </li>
+    <li>
+        <form 
+            action="#"
+            @submit.prevent="handleLogout"
+            >
+            <button type="submit">{{ user.email }} (Cerrar sesión)</button>
+        </form>
+    </li>
+    </template>
+    <template v-else>
+     <li>
+        <RouterLink to="/ingresar">Ingresar</RouterLink>
+        </li>
+        <li>
+        <RouterLink to="/crear-cuenta">Crear cuenta</RouterLink>
+        </li>
+    </template>
+    </ul>
+</nav>
+    
 </template>

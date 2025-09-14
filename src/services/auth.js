@@ -33,6 +33,7 @@ export async function login(email, password) {
         email,
         password,
     });
+    
     if(error) {
         console.error('[auth.js login] Error al iniciar sesión: ', error);
         throw error;

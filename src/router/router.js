@@ -3,6 +3,7 @@ import Home from '../pages/Home.vue';
 import GlobalChat from '../pages/GlobalChat.vue';
 import Login from '../pages/Login.vue';
 import Register from '../pages/Register.vue';
+import MyProfile from '../pages/MyProfile.vue';
 
 const routes = [
 
@@ -10,6 +11,7 @@ const routes = [
     {path: '/chat',              component: GlobalChat, },
     {path: '/ingresar',          component: Login,      },
     {path: '/crear-cuenta',      component: Register,   },
+    {path: '/mi-perfil',         component: MyProfile, },
 
 
     

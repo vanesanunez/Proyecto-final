@@ -21,7 +21,7 @@ export default {
 </script>
 
 <template>
-  <AppH1>¡Bienvenidos a Vía Segura!</AppH1>
+  <AppH1 class="hidden">¡Bienvenidos a Vía Segura!</AppH1>
 
   <div class="min-h-screen pb-28">
     <!-- pb para que no tape bottom nav -->
