@@ -1,3 +1,7 @@
+
+
+
+
 <script>
 import { RouterLink } from 'vue-router';
 import { logout, subscribeToUserState } from '../services/auth';
@@ -37,3 +41,8 @@ export default {
             </ul>
     </nav>
 </template>
+
+
+
+
+
