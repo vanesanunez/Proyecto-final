@@ -12,7 +12,8 @@ const accentMap = {
   yellow: 'border-4 border-yellow-300',
   blue2: 'border-4 border-sky-300'
 }
-const classes = computed(() => `bg-white rounded-2xl shadow-md p-6 flex flex-col items-center justify-center gap-2 ${accentMap[props.accent] || accentMap.blue}`)
+const classes = computed(() =>  `w-full min-h-[120px] bg-white rounded-2xl shadow-md p-4 sm:p-6 flex flex-col items-center justify-center gap-2 ${accentMap[props.accent] || accentMap.blue}`
+)
 </script>
 
 <template>
