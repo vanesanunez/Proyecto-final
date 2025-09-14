@@ -30,7 +30,11 @@ export default {
     <main class="max-w-md mx-auto px-4">
       <SearchBar @search="onSearch" />
 
-      <section class="grid grid-cols-2 gap-4 mt-6">
+      <div class="mt-6">
+          <InfoCard />
+        </div>
+
+      <section class="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-6">
         <ActionCard title="Hacer un reporte" to="/report/nuevo" accent="blue">
           <template #icon>✋</template>
         </ActionCard>
@@ -39,9 +43,7 @@ export default {
           <template #icon>🚩</template>
         </ActionCard>
 
-         <div class="grid grid-cols-1 md:grid-cols-2 gap-6 p-6">
-          <InfoCard />
-        </div>
+         
 
         <ActionCard
           title="Contactos de confianza"
