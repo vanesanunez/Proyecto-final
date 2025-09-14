@@ -1,11 +1,12 @@
 <script>
 import AppH1 from '../components/AppH1.vue';
-import { login, subscribeToUserState } from '../services/auth';
+import MainLoader from '../components/MainLoader.vue';
+import { login } from '../services/auth';
 
 
 export default {
     name: 'Login',
-    components: { AppH1, },
+    components: { AppH1, MainLoader },
     data() {
         return {
             user: {
@@ -27,18 +28,20 @@ export default {
             }
         }
     },
-    mounted() {
-        //se suscribe al estado de autenticación
-        subscribeToUserState(newUserState => this.user = newUserState);
-    }
+    
 }
 </script>
 
 <template>
     <AppH1>Ingresar a mi cuenta</AppH1>
 
-    <form action="#"
-          @submit.prevent="handleSubmit"
+    <div v-if="loading" class="flex justify-center items-center h-40">
+    <MainLoader />
+    </div>
+
+    <form v-else
+        action="#"
+        @submit.prevent="handleSubmit"
     >
         <div class="mb-4">
             <label for="email" class="mb-2">Email</label>

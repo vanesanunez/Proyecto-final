@@ -48,7 +48,7 @@ export default {
             action="#"
             @submit.prevent="handleLogout"
             >
-            <button type="submit">{{ user.email }} (Cerrar sesión)</button>
+            <button type="submit">Cerrar sesión</button>
         </form>
     </li>
     </template>
