@@ -1,8 +1,12 @@
 import supabase from "./supabase";
+import { createUserProfile, getUserProfileById } from "./user-profiles";
 
 //defino una variable que contenga los datos del usuario ("subject")
 let user = {
     id: null,
+    name: null,
+    lastname: null,
+    dni: null,
     email: null,
 }
 //Array para guardar la lista de observers que deben ser notificados de los cambios en "user"
@@ -14,7 +18,15 @@ loadInitialUserState();
 //Carga la información del usuario autenticado,si es que existe alguno
 async function loadInitialUserState() {
     const { data } = await supabase.auth.getUser();
+
     if(!data.user) return;
+    //traemos los datos faltantes (los que agregué después, nombre,apellido y dni)
+    getUserProfileById(data.user.id)
+    .then(profileData => updateUser({
+        name: profileData.name,
+        lastname: profileData.lastname,
+        dni: profileData.dni,
+    }));
 
     updateUser({
         id: data.user.id,
@@ -28,16 +40,33 @@ async function loadInitialUserState() {
     // notifyAll();
 }
 
-export async function register(email, password) {
+export async function register(email, name, lastname, dni, password) {
     //método signUp() de auth de supabase
     const { data, error } = await supabase.auth.signUp({
         email,
+        name,
+        lastname,
+        dni,
         password,
     });
+
     if(error) {
         console.error('[auth.js register] Error al crear una cuenta: ', error);
         throw error;
     }
+
+    try {
+        await createUserProfile({
+            id: data.user.id,
+            name,
+            lastname,
+            dni,
+            email,
+        });
+    } catch (errorProfile) {
+        throw errorProfile;
+    }
+
     //guardar los datos del usuario autenticado notificar a los observers del cambio
     updateUser({
         id: data.user.id,

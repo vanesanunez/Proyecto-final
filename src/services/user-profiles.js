@@ -34,5 +34,5 @@ export async function getUserProfileById(id) {
         console.error('[user-profiles.js getUserProfileById] Error al traer el perfil del usuario: ', error);
         throw error;
     }
-    return data;
+    return data[0];
 }

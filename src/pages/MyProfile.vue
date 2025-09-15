@@ -11,6 +11,9 @@ export default {
             user: {
                 id: null, 
                 email: null,
+                name: null,
+                lastname: null,
+                dni: null,
             }
         }
     },
@@ -29,12 +32,10 @@ export default {
         <dt class="font-bold mb-2">Email</dt>
         <dd class="mb-4">{{ user.email }}</dd>
         <dt class="font-bold mb-2">Nombre</dt>
-        <dd class="mb-4">nombre</dd>
+        <dd class="mb-4">{{ user.name }}</dd>
         <dt class="font-bold mb-2">Apellido</dt>
-        <dd class="mb-4">apellido</dd>
-        <dt class="font-bold mb-2">Teléfono</dt>
-        <dd class="mb-4">teléfono</dd>
+        <dd class="mb-4">{{ user.lastname }}</dd>
         <dt class="font-bold mb-2">DNI</dt>
-        <dd class="mb-4">dni número</dd>
+        <dd class="mb-4">{{ user.dni }}</dd>
     </dl>
 </template>
