@@ -3,7 +3,7 @@ import { subscribeToUserState } from "../services/auth";
 
 
 const routes = [
-    { path: '/',                    component: () => import('../pages/Home.vue')}, 
+    { path: '/',                    component: () => import('../pages/Home.vue'),         meta:{ requiresAuth: true,},}, 
     { path: '/ingresar',            component: () => import('../pages/Login.vue')},
     { path: '/crear-cuenta',        component: () => import('../pages/Register.vue')},
     { path: '/chat',                component: () => import('../pages/GlobalChat.vue'),   meta:{ requiresAuth: true,},}, 
