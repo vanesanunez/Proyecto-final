@@ -5,10 +5,10 @@ import { subscribeToUserState } from "../services/auth";
 const routes = [
   { path: '/ingresar',              component: () => import('../pages/Login.vue')},
   { path: '/crear-cuenta',          component: () => import('../pages/Register.vue')},
-  { path: '/',                      component: () => import('../pages/Home.vue'),         meta:{ requiresAuth: true,},}, 
-  { path: '/chat',                  component: () => import('../pages/GlobalChat.vue'),   meta:{ requiresAuth: true,},}, 
-  { path: '/mi-perfil',             component: () => import('../pages/MyProfile.vue'),    meta:{ requiresAuth: true,},}, 
-  { path: '/mi-perfil/editar',      component: () => import('../pages/MyProfile.vue'),    meta:{ requiresAuth: true,},}, 
+  { path: '/',                      component: () => import('../pages/Home.vue'),             meta:{ requiresAuth: true,},}, 
+  { path: '/chat',                  component: () => import('../pages/GlobalChat.vue'),       meta:{ requiresAuth: true,},}, 
+  { path: '/mi-perfil',             component: () => import('../pages/MyProfile.vue'),        meta:{ requiresAuth: true,},}, 
+  { path: '/mi-perfil/editar',      component: () => import('../pages/MyProfileEdit.vue'),    meta:{ requiresAuth: true,},}, 
     
     
   // Ruta para crear nuevo reporte

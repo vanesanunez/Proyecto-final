@@ -90,7 +90,8 @@ export default {
                         v-model="newMessage.body"
                         ></textarea>
                 </div>
-                <button type="submit" class="w-full transition px-4 py-2 rounded cursor-pointer bg-blue-600 hover:bg-blue-500 focus:bg-blue-500 active:bg-blue-700 text-white"
+                <button type="submit" class="w-full transition px-4 py-2 rounded cursor-pointer bg-blue-600
+                 hover:bg-blue-500 focus:bg-blue-500 active:bg-blue-700 text-white"
                 >Enviar
                 </button>
             </form>

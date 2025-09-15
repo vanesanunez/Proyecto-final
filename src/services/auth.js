@@ -120,6 +120,22 @@ export async function logout() {
   });
 }
 
+/**
+ * 
+ * @param {{ email: string, name: string, lastname: string}} data 
+ */
+export async function updateAuthUserProfile(data) {
+    try {
+        await updateAuthUserProfile(user.id, data);
+
+        updateUser(data);
+    } catch (error) {
+        console.error("[auth.js updateAuthUserProfile] Error al actualizar perfil: ", error);
+        throw error;
+    }
+}
+
+
 //Métodos para el observer
 
 /**

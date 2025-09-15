@@ -1,4 +1,5 @@
 <script>
+import { RouterLink } from 'vue-router';
 import AppH1 from '../components/AppH1.vue';
 import {subscribeToUserState} from '../services/auth';
 
@@ -25,7 +26,8 @@ export default {
 
 <template>
     <div class="flex gap-4 items-end">
-        <AppH1>Mi perfil</AppH1>
+        <AppH1 class="text-center">Mi perfil</AppH1>
+        <RouterLink to="/mi-perfil/editar" class="mb-4 text-blue-700">Editar</RouterLink>
     </div>
 
     <dl>
