@@ -50,7 +50,7 @@ export default {
 <template>
     <AppH1>Chat general</AppH1>
 
-    <div class="flex gap-4">
+    <div class="flex flex-col md:flex-row gap-4 items-center md:items-start justify-center md:justify-start">
         <section 
         ref="chatContainer"
         class="overflow-y-auto w-9/12 h-100 p-4 border border-blue-200 rounded">
@@ -68,7 +68,7 @@ export default {
                 </li>
             </ul>
         </section>
-        <section class="w-3/12">
+        <section class="md:w-3/12 w-full">
             <h2 class="mb-4 text-xl">Enviar un mensaje</h2>
             <form action="#"
             @submit.prevent="() => sendMessage()"
