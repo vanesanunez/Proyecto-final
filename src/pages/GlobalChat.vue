@@ -53,7 +53,7 @@ export default {
     <div class="flex flex-col md:flex-row gap-4 items-center md:items-start justify-center md:justify-start">
         <section 
         ref="chatContainer"
-        class="overflow-y-auto w-9/12 h-100 p-4 border border-blue-200 rounded">
+        class="overflow-y-auto w-9/12 h-100 p-3 border border-blue-200 rounded">
             <h2 class="sr-only">Lista de mensajes</h2>
 
             <ul class="flex flex-col gap-4">
