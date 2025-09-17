@@ -4,17 +4,20 @@ import AppH1 from '../components/AppH1.vue';
 import { saveGlobalChatMessage, subscribeToGlobalChatNewMessages, loadLastGlobalChatMessages } from '../services/global-chat';
 import { subscribeToUserState } from '../services/auth';
 import { RouterLink } from 'vue-router';
+import MainLoader from '../components/MainLoader.vue';
 
 //Variable para guardar la función de cancelar la suscripción a la autenticación.
 let unsubAuth = () => { };
 
 export default {
     name: 'GlobalChat',
-    components: { AppH1, },
+    components: { AppH1, MainLoader },
 
     data() {
         return {
             messages: [],
+            loadingMessages: true,
+
             newMessage: {
                 body: '',
             },
@@ -51,6 +54,8 @@ export default {
         //traemos los mensajes iniciales
         try {
             this.messages = await loadLastGlobalChatMessages();
+            this.loadingMessages = false; 
+
             await nextTick();
             this.$refs.chatContainer.scrollTop = this.$refs.chatContainer.scrollHeight;
         } catch (error) {
@@ -69,9 +74,14 @@ export default {
 
     <div class="flex flex-col md:flex-row gap-4 items-center md:items-start justify-center md:justify-start">
         <section ref="chatContainer" class="overflow-y-auto w-9/12 h-100 p-3 border border-blue-200 rounded">
+
             <h2 class="sr-only">Lista de mensajes</h2>
 
-            <ul class="flex flex-col gap-4">
+            <ul 
+                v-if="!loadingMessages"
+                class="flex flex-col gap-4"
+                >
+
                 <li v-for="message in messages" 
                     :key="message.id" 
                     class="flex flex-col gap-0.5">
@@ -88,6 +98,7 @@ export default {
                     <div class="text-sm text-gray-500 italic">{{ message.created_at }}</div>
                 </li>
             </ul>
+            <MainLoader v-else />
         </section>
 
         <section class="md:w-3/12 w-full">

@@ -6,7 +6,7 @@
 .loader {
   width: 60px;
   aspect-ratio: 1;
-  border: 15px solid #ddd;
+  border: 15px solid #ef7a4c;
   border-radius: 50%;
   position: relative;
   transform: rotate(45deg);
@@ -16,7 +16,7 @@
   position: absolute;
   inset: -15px;
   border-radius: 50%;
-  border: 15px solid #ef7a4c;
+  border: 15px solid #346cf0;
   animation: l18 2s infinite linear;
 }
 @keyframes l18 {

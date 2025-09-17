@@ -1,5 +1,4 @@
 <script>
-import { RouterLink } from 'vue-router';
 import AppH1 from '../components/AppH1.vue';
 import {subscribeToUserState} from '../services/auth';
 import { getUserProfileById } from '../services/user-profiles';
