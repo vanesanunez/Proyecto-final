@@ -9,6 +9,7 @@ const routes = [
   { path: '/chat',                  component: () => import('../pages/GlobalChat.vue'),       meta:{ requiresAuth: true,},}, 
   { path: '/mi-perfil',             component: () => import('../pages/MyProfile.vue'),        meta:{ requiresAuth: true,},}, 
   { path: '/mi-perfil/editar',      component: () => import('../pages/MyProfileEdit.vue'),    meta:{ requiresAuth: true,},}, 
+  { path: '/usuario/:id',           component: () => import('../pages/UserProfile.vue'),      meta:{ requiresAuth: true,},}, 
     
     
   // Ruta para crear nuevo reporte

@@ -3,9 +3,10 @@ import { nextTick } from 'vue';
 import AppH1 from '../components/AppH1.vue';
 import { saveGlobalChatMessage, subscribeToGlobalChatNewMessages, loadLastGlobalChatMessages } from '../services/global-chat';
 import { subscribeToUserState } from '../services/auth';
+import { RouterLink } from 'vue-router';
 
 //Variable para guardar la función de cancelar la suscripción a la autenticación.
-let unsubAuth = () => {};
+let unsubAuth = () => { };
 
 export default {
     name: 'GlobalChat',
@@ -15,10 +16,9 @@ export default {
         return {
             messages: [],
             newMessage: {
-                email: '',
                 body: '',
             },
-            user:{
+            user: {
                 id: null,
                 email: null,
                 name: null,
@@ -31,8 +31,9 @@ export default {
     methods: {
         async sendMessage() {
             await saveGlobalChatMessage({
-                email: this.newMessage.email,
                 body: this.newMessage.body,
+                user_id: this.user.id,
+                email: this.user.email,
             });
             this.newMessage.body = "";
         }
@@ -71,8 +72,18 @@ export default {
             <h2 class="sr-only">Lista de mensajes</h2>
 
             <ul class="flex flex-col gap-4">
-                <li v-for="message in messages" :key="message.id" class="flex flex-col gap-0.5">
-                    <div><b>{{ message.email }}</b> dijo:</div>
+                <li v-for="message in messages" 
+                    :key="message.id" 
+                    class="flex flex-col gap-0.5">
+
+                    <div>
+                        <RouterLink 
+                        :to="`/usuario/${message.user_id}`"
+                        class="font-bold text-blue-700 underline"
+                        >
+                        {{ message.email }}</RouterLink> 
+                        dijo:
+                    </div>
                     <div>{{ message.body }}</div>
                     <div class="text-sm text-gray-500 italic">{{ message.created_at }}</div>
                 </li>
@@ -88,7 +99,7 @@ export default {
                 <div class="mb-4">
                     <div class="block mb-1">Email</div>
                     <div class="font-bold">{{ user.email }}</div>
-                   
+
                 </div>
                 <div class="mb-4">
                     <label for="body" class="block mb-1">Mensaje</label>
