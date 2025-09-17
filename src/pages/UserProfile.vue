@@ -1,12 +1,12 @@
 <script>
 import AppH1 from '../components/AppH1.vue';
-import {subscribeToUserState} from '../services/auth';
+import MainLoader from '../components/MainLoader.vue';
 import { getUserProfileById } from '../services/user-profiles';
 
 
 export default {
     name: 'UserProfile',
-    components: { AppH1 },
+    components: { AppH1, MainLoader },
     data() {
         return {
             user: {
@@ -33,6 +33,7 @@ export default {
 </script>
 
 <template>
+    <template v-if="!loading">
     <AppH1 class="text-center">Perfil de {{ user.email }}</AppH1>
     
     <dl>
@@ -42,7 +43,9 @@ export default {
         <dd class="mb-4">{{ user.name }}</dd>
         <dt class="font-bold mb-2">Apellido</dt>
         <dd class="mb-4">{{ user.lastname }}</dd>
-        
-    </dl>
-
+        </dl>
+    </template>
+    <div v-else class="flex justify-center items-center h-full">
+        <MainLoader />
+    </div>
 </template>

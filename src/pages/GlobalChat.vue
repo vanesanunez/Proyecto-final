@@ -98,7 +98,9 @@ export default {
                     <div class="text-sm text-gray-500 italic">{{ message.created_at }}</div>
                 </li>
             </ul>
-            <MainLoader v-else />
+            <div v-else class="flex justify-center items-center h-full">
+                <MainLoader />
+            </div>
         </section>
 
         <section class="md:w-3/12 w-full">

@@ -35,7 +35,7 @@ export default {
 <template>
     <AppH1>Ingresar a mi cuenta</AppH1>
 
-    <div v-if="loading" class="flex justify-center items-center h-40">
+    <div v-if="loading" class="flex justify-center items-center h-full">
     <MainLoader />
     </div>
 
