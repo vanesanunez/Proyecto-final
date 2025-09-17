@@ -3,6 +3,8 @@ import AppH1 from '../components/AppH1.vue';
 import {subscribeToUserState, updateAuthUserProfile} from '../services/auth';
 import MainLoader from '../components/MainLoader.vue';
 
+//Variable para guardar la función de cancelar la suscripción a la autenticación.
+let unsubAuth = () => {}
 
 export default {
     name: 'MyProfileEdit',
@@ -38,8 +40,9 @@ export default {
         }
     },
     mounted() {
-        subscribeToUserState(newUserState => {
+       unsubAuth = subscribeToUserState(newUserState => {
             this.user = newUserState;
+
             //datos iniciales del form
             this.profile = {
                 email: this.user.email,
@@ -47,6 +50,10 @@ export default {
                 lastname: this.user.lastname,
             }
         });
+    },
+    unmounted() {
+        //cancelar la suscripción 
+        unsubAuth();
     }
 }
 </script>

@@ -136,9 +136,13 @@ export async function updateAuthUserProfile(data) {
 }
 
 
-//Métodos para el observer
+//Métodos para el observer//
 
 /**
+ * Suscribe un obseerver que se va a ejecutar cada vez que los datos del usuario autenticado cambien.
+ * El observer  debe ser una función (callback) que recibe como argumento el objeto con los datos del usuario.
+ * Retorna una nueva función que permite cancelar la suscripción.
+ * 
  * @param {({id: string|null, email:string|null}) => void} callback
  */
 export function subscribeToUserState(callback) {
@@ -147,7 +151,12 @@ export function subscribeToUserState(callback) {
 
   //ejecutamos el callback para pasarle los datos actuales
   notify(callback);
+
+  //retornamos una nueva función que elimina el callback de la lista de observers
+  return () => observers = observers.filter(obs => obs !== callback);
 }
+
+
 /**
  * invoca un observer y le pasa los datos del usuario
  * @param {({id: string|null, email:string|null}) => void} callback

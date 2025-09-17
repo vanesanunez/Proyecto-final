@@ -3,6 +3,8 @@ import { RouterLink } from 'vue-router';
 import AppH1 from '../components/AppH1.vue';
 import {subscribeToUserState} from '../services/auth';
 
+//Variable para guardar la función de cancelar la suscripción a la autenticación.
+let unsubAuth = () => {}
 
 export default {
     name: 'MyProfile',
@@ -19,7 +21,10 @@ export default {
         }
     },
     mounted() {
-        subscribeToUserState(newUserState => this.user = newUserState);
+      unsubAuth = subscribeToUserState(newUserState => this.user = newUserState);
+    },
+    unmounted() {
+        unsubAuth();
     }
 }
 </script>
