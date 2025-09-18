@@ -1,4 +1,5 @@
 <script>
+import { RouterLink } from 'vue-router';
 import AppH1 from '../components/AppH1.vue';
 import MainLoader from '../components/MainLoader.vue';
 import { getUserProfileById } from '../services/user-profiles';
@@ -36,7 +37,7 @@ export default {
     <template v-if="!loading">
     <AppH1 class="text-center">Perfil de {{ user.email }}</AppH1>
     
-    <dl>
+    <dl class="mb-4">
         <dt class="font-bold mb-2">Email</dt>
         <dd class="mb-4">{{ user.email }}</dd>
         <dt class="font-bold mb-2">Nombre</dt>
@@ -44,7 +45,15 @@ export default {
         <dt class="font-bold mb-2">Apellido</dt>
         <dd class="mb-4">{{ user.lastname }}</dd>
         </dl>
+
+        <hr class="mb-4">
+        <RouterLink 
+            :to="`/usuario/${user.id}/chat`"
+            class="text-blue-700"
+        >Iniciar conversación privada con {{ user.email }}
+        </RouterLink>
     </template>
+   
     <div v-else class="flex justify-center items-center h-full">
         <MainLoader />
     </div>

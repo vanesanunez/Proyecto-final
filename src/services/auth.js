@@ -15,6 +15,11 @@ let observers = [];
 //pedimos cargar la data actual del usuario apenas arranca:
 loadInitialUserState();
 
+//apenas levanta la aplicación pregunta si hay uhn usuario en localstorage que figure como autenticado
+if(localStorage.getItem('user')) {
+  user = JSON.parse(localStorage.getItem('user'));  //si hay usuario lo parseo y guardo en la variable "user"
+}
+
 //Carga la información del usuario autenticado,si es que existe alguno
 async function loadInitialUserState() {
   const { data } = await supabase.auth.getUser();
@@ -176,6 +181,13 @@ function updateUser(data) {
   user = {
     ...user,
     ...data,
-  };
+  }
+
+  if(user.id !== null){
+    localStorage.setItem('user', JSON.stringify(user));
+  } else {
+    localStorage.removeItem('user');
+  }
+
   notifyAll();
 }
