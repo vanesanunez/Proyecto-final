@@ -80,12 +80,7 @@ export async function register(email, name, lastname, dni, password) {
     id: data.user.id,
     email: data.user.email,
   });
-  // user = {
-  //     ...user,
-  //     id: data.user.id,
-  //     email: data.user.email,
-  // }
-  // notifyAll();
+  
 }
 
 export async function login(email, password) {
