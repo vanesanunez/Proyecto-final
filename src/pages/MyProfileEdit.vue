@@ -2,6 +2,8 @@
 import AppH1 from '../components/AppH1.vue';
 import { subscribeToUserState, updateAuthUserProfile } from '../services/auth';
 import MainLoader from '../components/MainLoader.vue';
+import MainButton from '../components/MainButton.vue';
+
 
 
 //Variable para guardar la función de cancelar la suscripción a la autenticación.
@@ -9,7 +11,7 @@ let unsubAuth = () => { }
 
 export default {
     name: 'MyProfileEdit',
-    components: { AppH1, MainLoader },
+    components: { AppH1, MainLoader, MainButton },
     data() {
         return {
             user: {
@@ -105,12 +107,11 @@ export default {
             <input type="text" id="lastname" class="w-full p-2 border border-blue-400 rounded"
                 v-model="profile.lastname">
         </div>
-        <button type="submit" class="w-full transition px-4 py-2 rounded cursor-pointer bg-blue-600
-                 hover:bg-blue-500 focus:bg-blue-500 active:bg-blue-700 text-white"
+        <MainButton type="submit"
         >
             <template v-if="!updating" >Actualizar</template>
             <MainLoader v-else />
-        </button>
+        </MainButton>
     </form>
 
 </template>
