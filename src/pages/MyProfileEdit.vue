@@ -5,7 +5,6 @@ import MainLoader from '../components/MainLoader.vue';
 import MainButton from '../components/MainButton.vue';
 
 
-
 //Variable para guardar la función de cancelar la suscripción a la autenticación.
 let unsubAuth = () => { }
 

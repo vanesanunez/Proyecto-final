@@ -1,13 +1,13 @@
 import supabase from "./supabase";
-import { createUserProfile, getUserProfileById } from "./user-profiles";
+import { createUserProfile, getUserProfileById, updateUserProfile } from "./user-profiles";
 
 //defino una variable que contenga los datos del usuario ("subject")
 let user = {
   id: null,
+  email: null,
   name: null,
   lastname: null,
   dni: null,
-  email: null,
 };
 //Array para guardar la lista de observers que deben ser notificados de los cambios en "user"
 let observers = [];
@@ -15,7 +15,7 @@ let observers = [];
 //pedimos cargar la data actual del usuario apenas arranca:
 loadInitialUserState();
 
-//apenas levanta la aplicación pregunta si hay uhn usuario en localstorage que figure como autenticado
+//apenas levanta la aplicación pregunta si hay un usuario en localstorage que figure como autenticado
 if(localStorage.getItem('user')) {
   user = JSON.parse(localStorage.getItem('user'));  //si hay usuario lo parseo y guardo en la variable "user"
 }
@@ -126,7 +126,7 @@ export async function logout() {
  */
 export async function updateAuthUserProfile(data) {
     try {
-        await updateAuthUserProfile(user.id, data);
+        await updateUserProfile(user.id, data);
 
         updateUser(data);
     } catch (error) {
