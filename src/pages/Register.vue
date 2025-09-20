@@ -1,10 +1,12 @@
 <script>
 import AppH1 from '../components/AppH1.vue';
+import MainButton from '../components/MainButton.vue';
+import MainLoader from '../components/MainLoader.vue';
 import { register } from '../services/auth';
 
 export default {
     name: 'Register',
-    components: { AppH1, },
+    components: { AppH1, MainLoader, MainButton },
     data () {
         return {
             user: {
@@ -83,8 +85,10 @@ export default {
                 v-model="user.password"
                 >
         </div>
-        <button type="submit" class="w-full transition px-4 py-2 rounded cursor-pointer bg-blue-600 hover:bg-blue-500 focus:bg-blue-500 active:bg-blue-700 text-white"
-        >Enviar
-        </button>
+        <MainButton type="submit"
+        >
+        <template v-if="!loading">Enviar</template>
+            <MainLoader v-else />
+        </MainButton>
     </form>
 </template>

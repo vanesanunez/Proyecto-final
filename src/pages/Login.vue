@@ -1,12 +1,13 @@
 <script>
 import AppH1 from '../components/AppH1.vue';
+import MainButton from '../components/MainButton.vue';
 import MainLoader from '../components/MainLoader.vue';
 import { login } from '../services/auth';
 
 
 export default {
     name: 'Login',
-    components: { AppH1, MainLoader },
+    components: { AppH1, MainLoader, MainButton },
     data() {
         return {
             user: {
@@ -35,7 +36,7 @@ export default {
 <template>
     <AppH1>Ingresar a mi cuenta</AppH1>
 
-    <div v-if="loading" class="flex justify-center items-center h-40">
+    <div v-if="loading" class="flex justify-center items-center h-full">
     <MainLoader />
     </div>
 
@@ -61,9 +62,11 @@ export default {
                 v-model="user.password"
                 >
         </div>
-        <button type="submit" class="w-full transition px-4 py-2 rounded cursor-pointer bg-blue-600 hover:bg-blue-500 focus:bg-blue-500 active:bg-blue-700 text-white"
-        >Iniciar sesión
-        </button>
+        <MainButton type="submit"
+        >
+        <template v-if="!loading">Ingresar</template>
+            <MainLoader v-else />
+        </MainButton>
     </form>
 
 </template>

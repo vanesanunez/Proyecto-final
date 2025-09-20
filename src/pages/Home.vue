@@ -5,6 +5,7 @@ import ActionCard from "../components/ActionCard.vue";
 import ReportCarousel from "../components/ReportCarousel.vue";
 import BottomNav from "../components/BottomNav.vue";
 import InfoCard from '../components/InfoCard.vue';
+import MainLoader from '../components/MainLoader.vue';
 
 
 const onSearch = (q) => {
@@ -16,12 +17,16 @@ const onSearch = (q) => {
 
 export default {
   name: "Home",
-  components: { AppH1, SearchBar, ActionCard, ReportCarousel, BottomNav, InfoCard },
+  components: { AppH1, SearchBar, ActionCard, ReportCarousel, BottomNav, InfoCard, MainLoader },
 };
 </script>
 
 <template>
   <AppH1 class="hidden">¡Bienvenidos a Vía Segura!</AppH1>
+
+  <div v-if="loading" class="flex justify-center items-center h-full">
+    <MainLoader />
+    </div>
 
   <div class="min-h-screen pb-28">
     <!-- pb para que no tape bottom nav -->

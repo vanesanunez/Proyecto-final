@@ -12,10 +12,16 @@ export async function loadLastGlobalChatMessages() {
     return data;
 }
 
+/**
+ * Graba un nuevo mensaje de chat
+ * @param {{email: string, body: string}} data 
+ * @returns {promise}
+ */
 export async function saveGlobalChatMessage(data) {   
     const { error } = await supabase
     .from('global_chat')
     .insert({
+        user_id: data.user_id,
         email: data.email,
         body: data.body,
     });

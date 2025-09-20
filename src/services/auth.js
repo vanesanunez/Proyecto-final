@@ -1,19 +1,24 @@
 import supabase from "./supabase";
-import { createUserProfile, getUserProfileById } from "./user-profiles";
+import { createUserProfile, getUserProfileById, updateUserProfile } from "./user-profiles";
 
 //defino una variable que contenga los datos del usuario ("subject")
 let user = {
   id: null,
+  email: null,
   name: null,
   lastname: null,
   dni: null,
-  email: null,
 };
 //Array para guardar la lista de observers que deben ser notificados de los cambios en "user"
 let observers = [];
 
 //pedimos cargar la data actual del usuario apenas arranca:
 loadInitialUserState();
+
+//apenas levanta la aplicación pregunta si hay un usuario en localstorage que figure como autenticado
+if(localStorage.getItem('user')) {
+  user = JSON.parse(localStorage.getItem('user'));  //si hay usuario lo parseo y guardo en la variable "user"
+}
 
 //Carga la información del usuario autenticado,si es que existe alguno
 async function loadInitialUserState() {
@@ -80,12 +85,7 @@ export async function register(email, name, lastname, dni, password) {
     id: data.user.id,
     email: data.user.email,
   });
-  // user = {
-  //     ...user,
-  //     id: data.user.id,
-  //     email: data.user.email,
-  // }
-  // notifyAll();
+  
 }
 
 export async function login(email, password) {
@@ -126,7 +126,7 @@ export async function logout() {
  */
 export async function updateAuthUserProfile(data) {
     try {
-        await updateAuthUserProfile(user.id, data);
+        await updateUserProfile(user.id, data);
 
         updateUser(data);
     } catch (error) {
@@ -136,9 +136,13 @@ export async function updateAuthUserProfile(data) {
 }
 
 
-//Métodos para el observer
+//Métodos para el observer//
 
 /**
+ * Suscribe un obseerver que se va a ejecutar cada vez que los datos del usuario autenticado cambien.
+ * El observer  debe ser una función (callback) que recibe como argumento el objeto con los datos del usuario.
+ * Retorna una nueva función que permite cancelar la suscripción.
+ * 
  * @param {({id: string|null, email:string|null}) => void} callback
  */
 export function subscribeToUserState(callback) {
@@ -147,7 +151,12 @@ export function subscribeToUserState(callback) {
 
   //ejecutamos el callback para pasarle los datos actuales
   notify(callback);
+
+  //retornamos una nueva función que elimina el callback de la lista de observers
+  return () => observers = observers.filter(obs => obs !== callback);
 }
+
+
 /**
  * invoca un observer y le pasa los datos del usuario
  * @param {({id: string|null, email:string|null}) => void} callback
@@ -172,6 +181,13 @@ function updateUser(data) {
   user = {
     ...user,
     ...data,
-  };
+  }
+
+  if(user.id !== null){
+    localStorage.setItem('user', JSON.stringify(user));
+  } else {
+    localStorage.removeItem('user');
+  }
+
   notifyAll();
 }

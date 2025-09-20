@@ -1,14 +1,12 @@
 <script>
 import { RouterLink } from 'vue-router';
 import AppH1 from '../components/AppH1.vue';
-import {subscribeToUserState} from '../services/auth';
 import MainLoader from '../components/MainLoader.vue';
+import { getUserProfileById } from '../services/user-profiles';
 
-//Variable para guardar la función de cancelar la suscripción a la autenticación.
-let unsubAuth = () => {}
 
 export default {
-    name: 'MyProfile',
+    name: 'UserProfile',
     components: { AppH1, MainLoader },
     data() {
         return {
@@ -22,37 +20,41 @@ export default {
             loading: false,
         }
     },
-    mounted() {
-      unsubAuth = subscribeToUserState(newUserState => this.user = newUserState);
-    },
-    unmounted() {
-        unsubAuth();
+   async mounted() {
+      try {
+        this.loading = true;
+        this.user = await getUserProfileById(this.$route.params.id);
+        this.loading = false;
+        
+      } catch (error) {
+        //manejar error
+      }
     }
 }
 </script>
 
 <template>
+    <template v-if="!loading">
+    <AppH1 class="text-center">Perfil de {{ user.email }}</AppH1>
     
-<template v-if="!loading">
-
-    <div class="flex gap-4 items-end">
-        <AppH1 class="text-center">Mi perfil</AppH1>
-        <RouterLink to="/mi-perfil/editar" class="mb-4 text-blue-700">Editar</RouterLink>
-    </div>
-
-    <dl>
+    <dl class="mb-4">
         <dt class="font-bold mb-2">Email</dt>
         <dd class="mb-4">{{ user.email }}</dd>
         <dt class="font-bold mb-2">Nombre</dt>
         <dd class="mb-4">{{ user.name }}</dd>
         <dt class="font-bold mb-2">Apellido</dt>
         <dd class="mb-4">{{ user.lastname }}</dd>
-        <dt class="font-bold mb-2">DNI</dt>
-        <dd class="mb-4">{{ user.dni }}</dd>
-    </dl>
-</template>
+        </dl>
 
-<div v-else class="flex justify-center items-center h-full">
+        <hr class="mb-4">
+        <RouterLink 
+            :to="`/usuario/${user.id}/chat`"
+            class="text-blue-700"
+        >Iniciar conversación privada con {{ user.email }}
+        </RouterLink>
+    </template>
+   
+    <div v-else class="flex justify-center items-center h-full">
         <MainLoader />
     </div>
 </template>
