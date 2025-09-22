@@ -1,8 +1,10 @@
 <script>
+import { nextTick } from 'vue';
 import AppH1 from '../components/AppH1.vue';
 import MainButton from '../components/MainButton.vue';
 import MainLoader from '../components/MainLoader.vue';
 import { subscribeToUserState } from '../services/auth';
+import { getLastPrivateChatMessages, sendPrivateChatMessage, subscribeToPrivateChatNewMessages } from '../services/private-chats';
 import { getUserProfileById } from '../services/user-profiles';
 
 export default {
@@ -35,22 +37,43 @@ export default {
     },
     methods: {
         async sendMessage() {
-
+            try {
+                sendPrivateChatMessage(this.userAuth.id, this.userChat.id, this.NewMessage.body);
+                this.NewMessage.body = '';
+            } catch (error) {
+                //manejar error
+            }
         }
     },
     async mounted() {
-        try {
-            subscribeToUserState(newDataUser => this.userAuth = newDataUser);
+    try {
+        subscribeToUserState(newDataUser => this.userAuth = newDataUser);
 
-            this.loadingUser = true;
-            this.loadingMessages = true;
+        this.loadingUser = true;
+        this.loadingMessages = true;
 
-            this.userChat = await getUserProfileById(this.$route.params.id);
-            this.loadingUser = false;
-        } catch (error) {
-            //manejar error
+        this.userChat = await getUserProfileById(this.$route.params.id);
+        this.loadingUser = false;
+
+        subscribeToPrivateChatNewMessages(this.userAuth.id, this.userChat.id, async newMessage => {
+            this.messages.push(newMessage);
+            await nextTick(); // scroll hacia abajo, para que se muestren los último msjs
+            if (this.$refs.chatContainer) {
+                this.$refs.chatContainer.scrollTop = this.$refs.chatContainer.scrollHeight;
+            }
+        });
+
+        this.messages = await getLastPrivateChatMessages(this.userAuth.id, this.userChat.id);
+        this.loadingMessages = false; 
+        await nextTick(); // scroll hacia abajo, para que se muestren los último msjs
+        if (this.$refs.chatContainer) {
+            this.$refs.chatContainer.scrollTop = this.$refs.chatContainer.scrollHeight;
         }
+    } catch (error) {
+        console.error("Error en mounted:", error);
     }
+}
+   
 }
 </script>
 
@@ -64,11 +87,16 @@ export default {
             <h2 class="sr-only">Lista de mensajes</h2>
 
             <ul v-if="!loadingMessages" 
-                class="flex flex-col gap-4">
+                class="flex flex-col items-start gap-4">
                 <li 
                     v-for="message in messages" 
                     :key="message.id" 
-                    class="flex flex-col gap-0.5">
+                    class="flex flex-col gap-0.5 max-w-8/12 p-4 rounded"
+                    :class="{
+                        'bg-gray-100': message.sender_id !== userAuth.id,
+                        'bg-green-100 self-end': message.sender_id === userAuth.id,
+                    }"
+                    >
                     
                     <div>{{ message.body }}</div>
                     <div class="text-sm text-gray-600">{{ message.created_at }}</div>

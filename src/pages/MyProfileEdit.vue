@@ -47,6 +47,7 @@ export default {
                 this.feedback = {
                     type: 'success',
                     message: 'Tu perfil se actualizó con éxito.',
+                    
                 }
 
             } catch (error) {

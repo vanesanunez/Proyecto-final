@@ -42,26 +42,52 @@ export default {
         }
     },
     async mounted() {
-        unsubAuth = subscribeToUserState(newUserData => this.user = newUserData);
+  unsubAuth = subscribeToUserState(newUserData => (this.user = newUserData));
 
-        //suscripción
-        subscribeToGlobalChatNewMessages(async newMessageReceived => {
-            this.messages.push(newMessageReceived);
-            await nextTick(); //scroll hacia abajo, para que se muestren los último msjs
-            this.$refs.chatContainer.scrollTop = this.$refs.chatContainer.scrollHeight;
-        });
+  try {
+    // Traer mensajes iniciales
+    this.messages = await loadLastGlobalChatMessages();
+    this.loadingMessages = false;
 
-        //traemos los mensajes iniciales
-        try {
-            this.messages = await loadLastGlobalChatMessages();
-            this.loadingMessages = false; 
+    await nextTick();
+    if (this.$refs.chatContainer) {
+      this.$refs.chatContainer.scrollTop = this.$refs.chatContainer.scrollHeight;
+    }
 
-            await nextTick();
-            this.$refs.chatContainer.scrollTop = this.$refs.chatContainer.scrollHeight;
-        } catch (error) {
-            //manejar el error!!
-        }
-    },
+    // recién acá suscribirse a nuevos mensajes
+    subscribeToGlobalChatNewMessages(async newMessageReceived => {
+      this.messages.push(newMessageReceived);
+      await nextTick();
+      if (this.$refs.chatContainer) {
+        this.$refs.chatContainer.scrollTop =
+          this.$refs.chatContainer.scrollHeight;
+      }
+    });
+  } catch (error) {
+    // manejar el error!!
+  }
+},
+    // async mounted() {
+    //     unsubAuth = subscribeToUserState(newUserData => this.user = newUserData);
+
+    //     //suscripción
+    //     subscribeToGlobalChatNewMessages(async newMessageReceived => {
+    //         this.messages.push(newMessageReceived);
+    //         await nextTick(); //scroll hacia abajo, para que se muestren los último msjs
+    //         this.$refs.chatContainer.scrollTop = this.$refs.chatContainer.scrollHeight;
+    //     });
+
+    //     //traemos los mensajes iniciales
+    //     try {
+    //         this.messages = await loadLastGlobalChatMessages();
+    //         this.loadingMessages = false; 
+
+    //         await nextTick();
+    //         this.$refs.chatContainer.scrollTop = this.$refs.chatContainer.scrollHeight;
+    //     } catch (error) {
+    //         //manejar el error!!
+    //     }
+    // },
     unmounted() {
         unsubAuth(); //cancelamos la suscripción a la autenticación
     }
