@@ -3,6 +3,7 @@ import AppH1 from '../components/AppH1.vue';
 import MainButton from '../components/MainButton.vue';
 import MainLoader from '../components/MainLoader.vue';
 import { subscribeToUserState } from '../services/auth';
+import { sendPrivateChatMessage } from '../services/private-chats';
 import { getUserProfileById } from '../services/user-profiles';
 
 export default {
@@ -35,7 +36,12 @@ export default {
     },
     methods: {
         async sendMessage() {
-
+            try {
+                sendPrivateChatMessage(this.userAuth.id, this.userChat.id, this.NewMessage.body);
+                this.NewMessage.body = '';
+            } catch (error) {
+                //manejar error
+            }
         }
     },
     async mounted() {
