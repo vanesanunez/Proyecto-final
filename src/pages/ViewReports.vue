@@ -37,6 +37,7 @@
   </div>
 
   </div>
+  </div>
 
    <router-link to="/" class="bg-blue-600 text-white py-2 px-4 rounded block w-1/2 mx-auto block text-center mb-3 hover:bg-blue-700">
       Volver a la página de inicio
