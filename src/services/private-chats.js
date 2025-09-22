@@ -1,5 +1,30 @@
 import supabase from "./supabase";
 
+
+
+/**
+ * 
+ * @param {string} sender_id 
+ * @param {string} receiver_id 
+ * @returns {Promise<number>}
+ */
+async function getPrivateChat(sender_id, receiver_id) {
+    let chat_id = await fetchPrivateChat(sender_id, receiver_id);
+
+    if(!chat_id) {
+        return await createPrivateChat(sender_id, receiver_id);
+    }
+
+    return chat_id;
+}
+
+
+/**
+ * 
+ * @param {string} sender_id 
+ * @param {string} receiver_id 
+ * @returns {Promise<number|null>}
+ */
 async function fetchPrivateChat(sender_id, receiver_id) {
     const { data, error } = await supabase
     .from('private_chats')
@@ -12,7 +37,8 @@ async function fetchPrivateChat(sender_id, receiver_id) {
         throw error;
     }
 
-    return data[0].id;
+    //leer el id solo si existe (conditional chaining operator)
+    return data[0]?.id;
 }
 
 
@@ -47,11 +73,7 @@ async function createPrivateChat(sender_id, receiver_id) {
  * @param {string} body 
  */
 export async function sendPrivateChatMessage(sender_id, receiver_id, body) {
-    let chat_id = await fetchPrivateChat(sender_id, receiver_id);
-
-    if(!chat_id) {
-        chat_id = await createPrivateChat(sender_id, receiver_id); 
-    }
+    const chat_id = await getPrivateChat(sender_id, receiver_id);
     
     const { error } = await supabase
     .from('private_messages')
