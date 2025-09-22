@@ -5,6 +5,7 @@ import MainLoader from '../components/MainLoader.vue';
 import { subscribeToUserState } from '../services/auth';
 import { getLastPrivateChatMessages, sendPrivateChatMessage, subscribeToPrivateChatNewMessages } from '../services/private-chats';
 import { getUserProfileById } from '../services/user-profiles';
+import { nextTick } from 'vue';
 
 export default {
     name: 'PrivateChat',
@@ -48,18 +49,22 @@ export default {
         try {
             subscribeToUserState(newDataUser => this.userAuth = newDataUser);
 
-            this.loadingUser = true;
-            this.loadingMessages = true;
+                this.loadingUser = true;
+                this.loadingMessages = true;
 
-            this.userChat = await getUserProfileById(this.$route.params.id);
-            this.loadingUser = false;
+                this.userChat = await getUserProfileById(this.$route.params.id);
+                this.loadingUser = false;
 
-            subscribeToPrivateChatNewMessages(this.userAuth.id, this.userChat.id, newMessage => {
+            subscribeToPrivateChatNewMessages(this.userAuth.id, this.userChat.id, async newMessage => {
                 this.messages.push(newMessage);
+                await nextTick(); //scroll hacia abajo, para que se muestren los último msjs
+                this.$refs.chatContainer.scrollTop = this.$refs.chatContainer.scrollHeight;
             });
 
-            this.messages = await getLastPrivateChatMessages(this.userAuth.id, this.userChat.id);
-            this.loadingMessages = false; 
+                this.messages = await getLastPrivateChatMessages(this.userAuth.id, this.userChat.id);
+                this.loadingMessages = false; 
+                await nextTick(); //scroll hacia abajo, para que se muestren los último msjs
+                this.$refs.chatContainer.scrollTop = this.$refs.chatContainer.scrollHeight;
         } catch (error) {
             //manejar error
         }
