@@ -121,3 +121,25 @@ export async function subscribeToPrivateChatNewMessages(sender_id, receiver_id, 
     );   
     privateChannel.subscribe(); 
 }
+
+/**
+ * 
+ * @param {string} sender_id 
+ * @param {string} receiver_id 
+ * @returns {Promise<{id: number, chat_id: number, sender_id: string, body: string, created_at: string}[]>}
+ */
+export async function getLastPrivateChatMessages(sender_id, receiver_id) {
+    const chat_id = await getPrivateChat(sender_id, receiver_id); 
+
+    const {data, error} = await supabase
+    .from('private_messages')
+    .select()
+    .eq('chat_id', chat_id);
+
+    if(error) {
+        console.error('[private-chats.js getLastPrivateChatMessages] Error al traer los últimos mensajes del chat privado: ', error);
+        throw error;
+    }
+
+    return data;
+}
