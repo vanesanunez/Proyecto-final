@@ -1,7 +1,3 @@
-import { saveReport, uploadImage } from '../services/reports';
-
-
-
 <template>
   <div class="max-w-md mx-auto p-4">
     <h2 class="text-2xl font-bold text-blue-700 mb-4">Nuevo reporte</h2>
@@ -65,44 +61,62 @@ import { saveReport, uploadImage } from '../services/reports';
 </template>
 
 <script setup>
-import { ref } from "vue";
-import { useRouter } from "vue-router";
+import { ref, onMounted, onUnmounted } from 'vue';
+import { useRouter } from 'vue-router';
+import { subscribeToUserState } from '../services/auth';
+import { saveReport, uploadImage } from '../services/reports';
 
-const categoria = ref("");
-const descripcion = ref("");
-const ubicacion = ref("");
+const categoria = ref('');
+const descripcion = ref('');
+const ubicacion = ref('');
+const imageFile = ref(null);
 const router = useRouter();
 
-const imageFile = ref(null)
+// 👇 NUEVO: Estado del usuario
+const user = ref({ id: null, email: null });
+let unsubAuth = () => {};
 
+// 👇 Se ejecuta cuando se monta el componente
+onMounted(() => {
+  unsubAuth = subscribeToUserState((newUser) => {
+    user.value = newUser;
+  });
+});
+
+// 👇 Limpieza al salir del componente
+onUnmounted(() => {
+  unsubAuth();
+});
+
+// Manejo del archivo
 const handleImageUpload = (event) => {
-  imageFile.value = event.target.files[0]
-}
+  imageFile.value = event.target.files[0];
+};
 
+// Envío del formulario
 const enviarReporte = async () => {
   try {
     let imageUrl = '';
-
     if (imageFile.value) {
       imageUrl = await uploadImage(imageFile.value);
     }
 
+    // 👇 Agregamos user_id y email al reporte
     await saveReport({
       categoria: categoria.value,
       descripcion: descripcion.value,
       ubicacion: ubicacion.value,
       imagen: imageUrl,
-      estado: 'Pendiente', // Por ejemplo
-      fecha: new Date().toISOString(),
-      reclamaron: 0,
+      user_id: user.value.id,
+      email: user.value.email,
     });
 
     router.push("/report/confirmado");
   } catch (error) {
     alert("Hubo un error al enviar el reporte");
+    console.error(error);
   }
 };
-
  
 </script>
 
