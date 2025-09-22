@@ -25,6 +25,7 @@ import supabase from './supabase';
  */
 
 export async function uploadImage(file){
+   console.log("Subiendo al bucket 'report-images' =>", file.name); 
     const fileName = `${Date.now()}_${file.name}`;
       const { data, error } = await supabase.storage
     .from('report-images') // nombre del bucket
@@ -48,12 +49,22 @@ export async function uploadImage(file){
  * @param  {{categoria: string, descripcion: string, ubicacion: string, imagen: string, estado: string, fecha: string, reclamaron: number}} data
  */
 
-export async function saveReport(data){
-    const{error} = await supabase.from('reports').insert(data);
-    if(error){
-        console.error('[saveReport] Error al guardar el reporte:', error);
+export async function saveReport(data) {
+  const { error } = await supabase
+    .from('reports')
+    .insert({
+      categoria: data.categoria,
+      descripcion: data.descripcion,
+      ubicacion: data.ubicacion,
+      imagen: data.imagen,
+      user_id: data.user_id,
+      email: data.email,
+    });
+
+  if (error) {
+    console.error('[saveReport] Error al guardar el reporte:', error);
     throw error;
-    }
+  }
 }
 
 /**

@@ -1,107 +1,52 @@
-<template>
-  <div class="max-w-md mx-auto p-4">
-    <h2 class="text-2xl font-bold text-blue-700 mb-4">Nuevo reporte</h2>
-
-    <!-- Mapa o imagen de ubicación -->
-    <div
-      class="bg-gray-100 rounded-lg h-40 flex items-center justify-center mb-4"
-    >
-      <span class="text-gray-500">[Mapa aquí]</span>
-    </div>
-
-    <!-- Formulario -->
-    <form @submit.prevent="enviarReporte">
-      <label class="block mb-2">
-        Categoría del problema
-        <select
-          v-model="categoria"
-          class="w-full mt-1 border rounded px-2 py-1"
-        >
-          <option disabled value="">Elegí una categoría</option>
-          <option>Iluminación</option>
-          <option>Infraestructura</option>
-          <option>Seguridad</option>
-        </select>
-      </label>
-
-      <label class="block mt-4 mb-2">
-        Descripción
-        <textarea
-          v-model="descripcion"
-          class="w-full mt-1 border rounded px-2 py-1"
-          placeholder="Describí lo que ocurrió..."
-        ></textarea>
-      </label>
-
-      <label class="block mt-4 mb-2">
-        Ubicación
-        <input
-          v-model="ubicacion"
-          type="text"
-          class="w-full mt-1 border rounded px-2 py-1"
-          placeholder="Calle, número, esquina..."
-        />
-      </label>
-
-      <input
-        type="file"
-        accept="image/*"
-        @change="handleImageUpload"
-        class="block w-full mt-2 border p-2 rounded"
-      />
-
-      <button
-        type="submit"
-        class="bg-coral text-white px-4 py-2 mt-4 rounded w-full hover:bg-opacity-90"
-      >
-        Enviar reporte
-      </button>
-    </form>
-  </div>
-</template>
-
 <script setup>
-import { ref, onMounted, onUnmounted } from 'vue';
-import { useRouter } from 'vue-router';
-import { subscribeToUserState } from '../services/auth';
-import { saveReport, uploadImage } from '../services/reports';
+import { ref } from "vue";
+import { useRouter } from "vue-router";
+import { uploadImage, saveReport } from "../services/reports";
+import { subscribeToUserState } from "../services/auth";
 
-const categoria = ref('');
-const descripcion = ref('');
-const ubicacion = ref('');
-const imageFile = ref(null);
+// Datos del formulario
+const categoria = ref("");
+const descripcion = ref("");
+const ubicacion = ref("");
+const imagen = ref(null);
+const errorMessage = ref("");
 const router = useRouter();
 
-// 👇 NUEVO: Estado del usuario
-const user = ref({ id: null, email: null });
-let unsubAuth = () => {};
+function onFileChange(e) {
+  const file = e.target.files[0];
+  if (file) {
+    imagen.value = file;
+  } else {
+    imagen.value = null;
+  }
+}
 
-// 👇 Se ejecuta cuando se monta el componente
-onMounted(() => {
-  unsubAuth = subscribeToUserState((newUser) => {
-    user.value = newUser;
-  });
+// Datos del usuario
+const user = ref({
+  id: null,
+  email: null,
 });
 
-// 👇 Limpieza al salir del componente
-onUnmounted(() => {
-  unsubAuth();
+subscribeToUserState((newUserData) => {
+  user.value = newUserData;
 });
 
-// Manejo del archivo
-const handleImageUpload = (event) => {
-  imageFile.value = event.target.files[0];
-};
-
-// Envío del formulario
-const enviarReporte = async () => {
+// Manejador de envío
+async function handleSubmit() {
   try {
-    let imageUrl = '';
-    if (imageFile.value) {
-      imageUrl = await uploadImage(imageFile.value);
+    if (
+      !categoria.value ||
+      !descripcion.value ||
+      !ubicacion.value ||
+      !imagen.value
+    ) {
+      errorMessage.value =
+        "Por favor completá todos los campos y subí una imagen.";
+      return;
     }
 
-    // 👇 Agregamos user_id y email al reporte
+    const imageUrl = await uploadImage(imagen.value);
+
     await saveReport({
       categoria: categoria.value,
       descripcion: descripcion.value,
@@ -111,17 +56,65 @@ const enviarReporte = async () => {
       email: user.value.email,
     });
 
+    // Redirigir al confirmar
     router.push("/report/confirmado");
   } catch (error) {
-    alert("Hubo un error al enviar el reporte");
-    console.error(error);
+    errorMessage.value = "No se pudo enviar el reporte. Intentalo de nuevo.";
   }
-};
- 
+}
 </script>
 
-<style scoped>
-.bg-coral {
-  background-color: #ff7f50;
-}
-</style>
+<template>
+  <div class="max-w-xl mx-auto mt-10">
+    <h1 class="text-2xl font-bold mb-6">Nuevo Reporte</h1>
+
+    <form @submit.prevent="handleSubmit">
+      <div class="mb-4">
+        <label class="block mb-2">
+          Categoría del problema
+          <select
+            v-model="categoria"
+            class="w-full mt-1 border rounded px-2 py-1"
+          >
+            <option disabled value="">Elegí una categoría</option>
+            <option>Iluminación</option>
+            <option>Infraestructura</option>
+            <option>Seguridad</option>
+          </select>
+        </label>
+      </div>
+
+      <div class="mb-4">
+        <label class="block mb-1">Descripción</label>
+        <textarea
+          v-model="descripcion"
+          class="w-full p-2 border border-gray-300 rounded"
+        ></textarea>
+      </div>
+
+      <div class="mb-4">
+        <label class="block mb-1">Ubicación</label>
+        <input
+          v-model="ubicacion"
+          class="w-full p-2 border border-gray-300 rounded"
+        />
+      </div>
+
+      <div class="mb-4">
+        <label class="block mb-1">Imagen</label>
+        <input type="file" @change="onFileChange" />
+      </div>
+
+      <div v-if="errorMessage" class="text-red-600 mb-4">
+        {{ errorMessage }}
+      </div>
+
+      <button
+        type="submit"
+        class="bg-blue-600 text-white py-2 px-4 rounded hover:bg-blue-500"
+      >
+        Enviar Reporte
+      </button>
+    </form>
+  </div>
+</template>
