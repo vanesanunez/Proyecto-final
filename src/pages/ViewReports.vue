@@ -3,7 +3,7 @@
     <h1 class="text-2xl font-semibold text-center mb-4">Reportes</h1>
 
     <!-- Botón de filtro -->
-    <div class="flex justify-center mb-4">
+  <!--  <div class="flex justify-center mb-4">
       <button
         @click="toggleFiltro"
         class="bg-blue-500 text-white px-4 py-2 rounded"
@@ -43,6 +43,7 @@
         </button>
       </div>
     </div>
+   
 
     <!-- Lista de reportes -->
     <div
