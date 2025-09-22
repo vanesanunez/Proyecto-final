@@ -23,12 +23,19 @@
     </div>
 
     <!-- Lista de reportes -->
-    <div v-for="(reporte, index) in reportesFiltrados" :key="index" class="bg-white border border-gray-300 rounded p-4 mb-4 shadow">
-      <h2 class="text-md font-semibold mb-1">{{ reporte.titulo }}</h2>
-      <p class="text-sm text-gray-600 mb-1">Enviado: {{ reporte.fecha }}</p>
-      <p class="text-sm mb-1">Estado: <span :class="reporte.estado === 'Resuelto' ? 'text-green-600' : 'text-orange-500'">{{ reporte.estado }}</span></p>
-      <p class="text-sm text-gray-500">{{ reporte.reclamaron }} personas también reclamaron esto</p>
-    </div>
+  
+  <div v-for="(reporte, index) in reportes" :key="index" class="bg-white border border-gray-300 rounded p-4 mb-4 shadow">
+  <h2 class="text-md font-semibold mb-1">{{ reporte.categoria }}</h2>
+  <p class="text-sm text-gray-600 mb-1">Descripción: {{ reporte.descripcion }}</p>
+  <p class="text-sm text-gray-600 mb-1">Ubicación: {{ reporte.ubicacion }}</p>
+  <p class="text-sm text-gray-600 mb-1">Enviado por: {{ reporte.email }}</p>
+  <p class="text-sm text-gray-600 mb-1">Fecha: {{ new Date(reporte.created_at).toLocaleString() }}</p>
+
+  <!-- Imagen -->
+  <div v-if="reporte.imagen" class="mt-2">
+    <img :src="reporte.imagen" alt="Imagen del reporte" class="w-full rounded border" />
+  </div>
+
   </div>
 
    <router-link to="/" class="bg-blue-600 text-white py-2 px-4 rounded block w-1/2 mx-auto block text-center mb-3 hover:bg-blue-700">
