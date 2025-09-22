@@ -37,7 +37,8 @@
 </template>
 
 <script setup>
-import { ref, computed } from 'vue'
+import { fetchAllReports, subscribeToNewReports } from '../services/reports';
+import { onMounted, ref, computed } from 'vue';
 
 const mostrarFiltro = ref(false)
 
@@ -46,12 +47,19 @@ const toggleFiltro = () => {
 }
 
 // Simulamos reportes por ahora
-const reportes = ref([
-  { titulo: 'Reporte de bache en avenida', fecha: '02/03/2025', estado: 'Pendiente', reclamaron: 12 },
-  { titulo: 'Reporte de peligro de tráfico', fecha: '14/10/2023', estado: 'Resuelto', reclamaron: 15 },
-  { titulo: 'Reporte de robo', fecha: '15/08/2024', estado: 'Pendiente', reclamaron: 20 },
-  { titulo: 'Reporte de poste de luminaria', fecha: '25/02/2024', estado: 'Resuelto', reclamaron: 10 },
-])
+const reportes = ref([]);
+
+onMounted(async () => {
+  try {
+    reportes.value = await fetchAllReports();
+
+    subscribeToNewReports((nuevoReporte) => {
+      reportes.value.push(nuevoReporte);
+    });
+  } catch (err) {
+    console.error('Error al traer los reportes', err);
+  }
+});
 
 const filtros = ref({
   masRecientes: true,

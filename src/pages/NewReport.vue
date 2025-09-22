@@ -1,3 +1,7 @@
+import { saveReport, uploadImage } from '../services/reports';
+
+
+
 <template>
   <div class="max-w-md mx-auto p-4">
     <h2 class="text-2xl font-bold text-blue-700 mb-4">Nuevo reporte</h2>
@@ -75,16 +79,31 @@ const handleImageUpload = (event) => {
   imageFile.value = event.target.files[0]
 }
 
-const enviarReporte = () => {
-  console.log("Reporte enviado:", {
-    categoria: categoria.value,
-    descripcion: descripcion.value,
-    ubicacion: ubicacion.value,
-  });
+const enviarReporte = async () => {
+  try {
+    let imageUrl = '';
 
-  // Redirige a la pantalla de confirmación
-  router.push("/report/confirmado");
+    if (imageFile.value) {
+      imageUrl = await uploadImage(imageFile.value);
+    }
+
+    await saveReport({
+      categoria: categoria.value,
+      descripcion: descripcion.value,
+      ubicacion: ubicacion.value,
+      imagen: imageUrl,
+      estado: 'Pendiente', // Por ejemplo
+      fecha: new Date().toISOString(),
+      reclamaron: 0,
+    });
+
+    router.push("/report/confirmado");
+  } catch (error) {
+    alert("Hubo un error al enviar el reporte");
+  }
 };
+
+ 
 </script>
 
 <style scoped>
