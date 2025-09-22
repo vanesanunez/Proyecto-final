@@ -1,13 +1,5 @@
 import supabase from "./supabase";
 
-//caché local de los id de chats privados para evitar tener que buscarlo múltiples veces
-//objeto que guarde los ids 
-let privateChatIdsCache = {};
-
-//levantamos del caché los ids que haya almacenados 
-if(localStorage.getItem('privateChatIds')) {
-    privateChatIdsCache = JSON.parse(localStorage.getItem('privateChatIds'));
-}
 
 
 /**
@@ -17,19 +9,11 @@ if(localStorage.getItem('privateChatIds')) {
  * @returns {Promise<number>}
  */
 async function getPrivateChat(sender_id, receiver_id) {
-    //al arrancar la peticion obtenemos la clave del caché (preguntamos si está el id en el caché)
-    const cacheKey = [sender_id, receiver_id].sort().join('_');
-    if(privateChatIdsCache[cacheKey]) return privateChatIdsCache[cacheKey];
-
     let chat_id = await fetchPrivateChat(sender_id, receiver_id);
 
     if(!chat_id) {
-        chat_id = await createPrivateChat(sender_id, receiver_id);
+        return await createPrivateChat(sender_id, receiver_id);
     }
-
-    //guardamos el id en el caché
-    privateChatIdsCache[cacheKey] = chat_id;
-    localStorage.setItem('privateChatIds', JSON.stringify(privateChatIdsCache));
 
     return chat_id;
 }
@@ -142,7 +126,7 @@ export async function subscribeToPrivateChatNewMessages(sender_id, receiver_id, 
  * 
  * @param {string} sender_id 
  * @param {string} receiver_id 
- * @returns {Promise<{id: number, chat_id: number, sender_id: string, body: string, created_at: string}[]>}
+ * @returns {Promise<{id: number, chat_id: number, sender_id: string, body: string, created_at:}>}
  */
 export async function getLastPrivateChatMessages(sender_id, receiver_id) {
     const chat_id = await getPrivateChat(sender_id, receiver_id); 
