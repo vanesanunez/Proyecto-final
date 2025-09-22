@@ -77,11 +77,16 @@ export default {
             <h2 class="sr-only">Lista de mensajes</h2>
 
             <ul v-if="!loadingMessages" 
-                class="flex flex-col gap-4">
+                class="flex flex-col items-start gap-4">
                 <li 
                     v-for="message in messages" 
                     :key="message.id" 
-                    class="flex flex-col gap-0.5">
+                    class="flex flex-col gap-0.5 max-w-8/12 p-4 rounded"
+                    :class="{
+                        'bg-gray-100': message.sender_id !== userAuth.id,
+                        'bg-green-100 self-end': message.sender_id === userAuth.id,
+                    }"
+                    >
                     
                     <div>{{ message.body }}</div>
                     <div class="text-sm text-gray-600">{{ message.created_at }}</div>
