@@ -38,8 +38,12 @@ const routes = [
   path: '/contactos',
   name: 'ContactosConfianza',
   component: () => import('../pages/Contacts.vue')
+},
+{
+  path: '/recorrido-seguro',
+  name: 'Routes',
+  component: () => import('../pages/Routes.vue')
 }
-
 ];
 
 const router = createRouter({
