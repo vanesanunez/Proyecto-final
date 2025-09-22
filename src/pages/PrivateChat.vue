@@ -3,7 +3,7 @@ import AppH1 from '../components/AppH1.vue';
 import MainButton from '../components/MainButton.vue';
 import MainLoader from '../components/MainLoader.vue';
 import { subscribeToUserState } from '../services/auth';
-import { sendPrivateChatMessage } from '../services/private-chats';
+import { sendPrivateChatMessage, subscribeToPrivateChatNewMessages } from '../services/private-chats';
 import { getUserProfileById } from '../services/user-profiles';
 
 export default {
@@ -53,6 +53,11 @@ export default {
 
             this.userChat = await getUserProfileById(this.$route.params.id);
             this.loadingUser = false;
+
+            subscribeToPrivateChatNewMessages(this.userAuth.id, this.userChat.id, newMessage => {
+                this.messages.push(newMessage);
+                this.loadingMessages = false;
+            });
         } catch (error) {
             //manejar error
         }

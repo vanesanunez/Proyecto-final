@@ -26,11 +26,15 @@ async function getPrivateChat(sender_id, receiver_id) {
  * @returns {Promise<number|null>}
  */
 async function fetchPrivateChat(sender_id, receiver_id) {
+    //ordenamos los ids para que siempre queden en un mismo orden
+    const userIds = [sender_id, receiver_id].sort();
+
+
     const { data, error } = await supabase
     .from('private_chats')
     .select('id')
-    .eq('user_id1', sender_id)
-    .eq('user_id2', receiver_id);
+    .eq('user_id1', userIds[0])
+    .eq('user_id2', userIds[1]);
 
     if(error) {
         console.error('[private-chats.js fetchPrivateChat] Error al traer el chat privado: ', error);
@@ -49,11 +53,15 @@ async function fetchPrivateChat(sender_id, receiver_id) {
  * @returns {Promise<number>}
  */
 async function createPrivateChat(sender_id, receiver_id) {
+
+    //ordenamos los ids para que siempre queden en un mismo orden
+    const userIds = [sender_id, receiver_id].sort();
+
     const { data, error } = await supabase
     .from('private_chats')
     .insert({
-        user_id1: sender_id,
-        user_id2: receiver_id,
+        user_id1: userIds[0],
+        user_id2: userIds[1],
     })
     //llamando a .select() luego de un .insert() nos retorna el registro que acaba de ser insertado en la BBDD
     .select();
@@ -96,5 +104,20 @@ export async function sendPrivateChatMessage(sender_id, receiver_id, body) {
  * @param {() => {}} callback 
  */
 export async function subscribeToPrivateChatNewMessages(sender_id, receiver_id, callback) {
-    
+    const chat_id = await getPrivateChat(sender_id, receiver_id);
+
+    const privateChannel = supabase.channel('private-chats');
+    privateChannel.on(
+        'postgres_changes',
+        {
+            event: 'INSERT',
+            schema: 'public',
+            table: 'private_messages',
+            filter: 'chat_id=eq.' + chat_id, //filter permite aclara una condición que debe cumplirse para aceptar una notificación de este evento (para que sean los msjs del chat en el que estamos involucrados )
+        },
+        payload => {
+            callback(payload.new);
+        }
+    );   
+    privateChannel.subscribe(); 
 }
