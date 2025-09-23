@@ -41,11 +41,15 @@ export default {
 
       <section class="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-6">
         <ActionCard title="Hacer un reporte" to="/report/nuevo" accent="blue">
-          <template #icon>✋</template>
+          <template #icon>
+          <img src="/public/mano.png" alt="ícono mano"/>
+          </template>
         </ActionCard>
 
         <ActionCard title="Ver reportes" to="/reportes" accent="coral">
-          <template #icon>🚩</template>
+          <template #icon>
+            <img src="/public/ojo.png" alt="ícono ojo"/>
+          </template>
         </ActionCard>
 
          
@@ -55,7 +59,9 @@ export default {
           to="/contactos"
           accent="yellow"
         >
-          <template #icon>👥</template>
+          <template #icon>
+            <img src="/public/comunidad.png" alt="ícono comunidad"/>
+          </template>
         </ActionCard>
 
         <ActionCard
@@ -63,7 +69,9 @@ export default {
           to="/recorrido-seguro"
           accent="blue2"
         >
-          <template #icon>🏠</template>
+          <template #icon>
+            <img src="/public/ruta.png" alt="ícono ruta"/>
+          </template>
         </ActionCard>
       </section>
 
