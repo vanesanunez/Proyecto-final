@@ -1,16 +1,15 @@
 const BASE = 'https://nominatim.openstreetmap.org'
 
 const headers={
-    'Accept':'aplication/json',
+    'Accept':'application/json',
     'User-Agent': 'ViaSeguraApp/1.0 (Proyecto escolar - Escuela Da Vinci)'
 }
 
 // Texto → coordenadas (sugerencias)
-export async function nominatimSearch(query, {
-  countrycodes = 'ar',
-  limit = 8,
-  lang = 'es'
-} = {}) {
+export async function nominatimSearch(
+  query,
+  { countrycodes = 'ar', limit = 10, lang = 'es', viewbox = null, bounded = 0, layer = 'address', dedupe = 0 } = {}
+) {
   const url = new URL(`${BASE}/search`)
   url.searchParams.set('q', query)
   url.searchParams.set('format', 'jsonv2')
@@ -18,10 +17,14 @@ export async function nominatimSearch(query, {
   url.searchParams.set('limit', String(limit))
   url.searchParams.set('accept-language', lang)
   if (countrycodes) url.searchParams.set('countrycodes', countrycodes)
+  if (viewbox) url.searchParams.set('viewbox', viewbox)          // lon1,lat1,lon2,lat2
+  if (bounded) url.searchParams.set('bounded', String(bounded))   // 0 = sesgo, 1 = filtro duro
+  if (layer) url.searchParams.set('layer', layer)                 // 'address' prioriza calles/alturas
+  url.searchParams.set('dedupe', String(dedupe))                  // 0 = NO deduplicar (queremos varias "Las Flores")
 
   const res = await fetch(url, { headers })
   if (!res.ok) throw new Error('Nominatim search error')
-  return res.json() // [{ lat, lon, display_name, address, ... }]
+  return res.json()
 }
 
 // Coordenadas → dirección
