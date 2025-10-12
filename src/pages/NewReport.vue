@@ -74,6 +74,22 @@ async function handleSubmit() {
     <h1 class="text-2xl font-bold mb-6">Nuevo Reporte</h1>
 
     <form @submit.prevent="handleSubmit">
+
+       <!-- MAPA + Buscador -->
+      <div class="mb-4">
+        <label class="block mb-1 font-semibold">Ubicación</label>
+        <MapSearchPicker
+          v-model="coords"
+          height="230px"
+          @resolved-address="ubicacion = $event"
+        />
+        <div class="text-sm text-gray-600 mt-2" v-if="coords">
+          Punto: {{ coords.lat?.toFixed(5) }}, {{ coords.lng?.toFixed(5) }}
+        </div>
+      </div>
+
+      
+
       <div class="mb-4">
         <label class="block mb-2">
           Categoría del problema
@@ -97,25 +113,7 @@ async function handleSubmit() {
         ></textarea>
       </div>
 
-         <!-- MAPA + Buscador -->
-      <div class="mb-4">
-        <label class="block mb-1 font-semibold">Ubicación</label>
-        <MapSearchPicker
-          v-model="coords"
-          height="230px"
-          @resolved-address="ubicacion = $event"
-        />
-        <div class="text-sm text-gray-600 mt-2" v-if="coords">
-          Punto: {{ coords.lat?.toFixed(5) }}, {{ coords.lng?.toFixed(5) }}
-        </div>
-      </div>
-
-      <!-- Campo editable por si quiere ajustar la referencia -->
-      <div class="mb-4">
-        <label class="block mb-1">Referencia (se puede editar)</label>
-        <input v-model="ubicacion" class="w-full p-2 border border-gray-300 rounded"
-               placeholder="Ej: Av Callao 1400, Recoleta, CABA" />
-      </div>
+      
 
      
 
