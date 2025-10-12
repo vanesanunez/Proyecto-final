@@ -1,7 +1,7 @@
 <script setup>
-import{ref,onMounted,onBeforeUnmount} from 'vue
+import { ref, onMounted, onBeforeUnmount } from 'vue'
 import L from 'leaflet'
-import { nominatimSearch, nominatimReverse, composeAddress } from '@/services/nominatim'
+import { nominatimSearch, nominatimReverse, composeAddress } from '../services/nominatim'
 
 // FIX iconos con Vite
 import icon2x from 'leaflet/dist/images/marker-icon-2x.png'
@@ -13,7 +13,7 @@ L.Icon.Default.mergeOptions({ iconRetinaUrl: icon2x, iconUrl: icon, shadowUrl: s
 const props = defineProps({
   modelValue: { type: Object, default: null }, // { lat, lng }
   height: { type: String, default: '230px' },
-  start: { type: Array, default: () => [-34.6037, -58.3816] }, // CABA por defecto
+  start: { type: Array, default: () => [-34.6037, -58.3816] },
   zoom: { type: Number, default: 13 }
 })
 const emit = defineEmits(['update:modelValue', 'resolved-address'])
@@ -29,7 +29,6 @@ function setMarker(lat, lng, notify = true) {
     marker.on('dragend', async () => {
       const { lat, lng } = marker.getLatLng()
       emit('update:modelValue', { lat, lng })
-      // reverse para actualizar texto legible
       try {
         const rev = await nominatimReverse(lat, lng)
         emit('resolved-address', composeAddress(rev.address) || rev.display_name)
@@ -105,7 +104,6 @@ onBeforeUnmount(() => {
 
 <template>
   <div class="rounded-2xl overflow-hidden border border-gray-200 bg-white">
-    <!-- Buscador -->
     <div class="p-2">
       <div class="relative">
         <input
@@ -125,7 +123,6 @@ onBeforeUnmount(() => {
       </div>
     </div>
 
-    <!-- Mapa -->
     <div :style="{ height }" ref="mapEl"></div>
   </div>
 </template>

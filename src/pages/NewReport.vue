@@ -3,11 +3,14 @@ import { ref } from "vue";
 import { useRouter } from "vue-router";
 import { uploadImage, saveReport } from "../services/reports";
 import { subscribeToUserState } from "../services/auth";
+import MapSearchPicker from  "../components/MapSearchPicker.vue";
+
 
 // Datos del formulario
 const categoria = ref("");
 const descripcion = ref("");
 const ubicacion = ref("");
+const coords =ref(null);
 const imagen = ref(null);
 const errorMessage = ref("");
 const router = useRouter();
@@ -51,6 +54,8 @@ async function handleSubmit() {
       categoria: categoria.value,
       descripcion: descripcion.value,
       ubicacion: ubicacion.value,
+      latitud: coords.value.lat,
+      longitud:coords.value.lng,
       imagen: imageUrl,
       user_id: user.value.id,
       email: user.value.email,
@@ -92,13 +97,27 @@ async function handleSubmit() {
         ></textarea>
       </div>
 
+         <!-- MAPA + Buscador -->
       <div class="mb-4">
-        <label class="block mb-1">Ubicación</label>
-        <input
-          v-model="ubicacion"
-          class="w-full p-2 border border-gray-300 rounded"
+        <label class="block mb-1 font-semibold">Ubicación</label>
+        <MapSearchPicker
+          v-model="coords"
+          height="230px"
+          @resolved-address="ubicacion = $event"
         />
+        <div class="text-sm text-gray-600 mt-2" v-if="coords">
+          Punto: {{ coords.lat?.toFixed(5) }}, {{ coords.lng?.toFixed(5) }}
+        </div>
       </div>
+
+      <!-- Campo editable por si quiere ajustar la referencia -->
+      <div class="mb-4">
+        <label class="block mb-1">Referencia (se puede editar)</label>
+        <input v-model="ubicacion" class="w-full p-2 border border-gray-300 rounded"
+               placeholder="Ej: Av Callao 1400, Recoleta, CABA" />
+      </div>
+
+     
 
       <div class="mb-4">
         <label class="block mb-1">Imagen</label>

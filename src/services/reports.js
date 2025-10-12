@@ -56,6 +56,8 @@ export async function saveReport(data) {
       categoria: data.categoria,
       descripcion: data.descripcion,
       ubicacion: data.ubicacion,
+      latitud:data.latitud,
+      longitud: data.longitud,
       imagen: data.imagen,
       user_id: data.user_id,
       email: data.email,
