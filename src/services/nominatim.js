@@ -1,8 +1,10 @@
-const BASE = 'https://nominatim.openstreetmap.org'
+//const BASE = 'https://nominatim.openstreetmap.org'
+
+const BASE = '/nominatim' 
 
 const headers={
     'Accept':'application/json',
-    'User-Agent': 'ViaSeguraApp/1.0 (Proyecto escolar - Escuela Da Vinci)'
+    
 }
 
 // Texto → coordenadas (sugerencias)
