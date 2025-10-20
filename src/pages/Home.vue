@@ -37,6 +37,7 @@ export default {
 
       <div class="mt-6">
           <InfoCard />
+          
         </div>
 
       <section class="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-6">
