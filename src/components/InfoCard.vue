@@ -31,7 +31,7 @@ const fetchInfo = async () => {
 
 <template>
    <div
-  class="w-40 h-40 border-2 border-blue-400 rounded-lg flex flex-col items-center justify-center text-center shadow-md hover:shadow-lg transition"
+  class="w-full h-40 border-2 border-blue-400 rounded-lg flex flex-col items-center justify-center text-center shadow-md hover:shadow-lg transition"
 >
   <h2 class="text-base font-semibold text-blue-700 mb-2">ℹ️ Info Útil</h2>
   
