@@ -24,7 +24,7 @@ export async function nominatimSearch(
   if (layer) url.searchParams.set('layer', layer)                 // 'address' prioriza calles/alturas
   url.searchParams.set('dedupe', String(dedupe))                  // 0 = NO deduplicar (queremos varias "Las Flores")
 
-  const res = await fetch(url, { headers })
+  const res = await fetch(url, { headers, referrer: 'ViaSeguraApp/1.0 (Proyecto escolar - Escuela Da Vinci)'})
   if (!res.ok) throw new Error('Nominatim search error')
   return res.json()
 }
